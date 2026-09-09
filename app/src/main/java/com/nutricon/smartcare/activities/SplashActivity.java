@@ -32,12 +32,19 @@ public class SplashActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
 
+        SharedPreferences prefs = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
+        boolean hasOnboarded = prefs.getBoolean("has_onboarded", false);
+
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, PromptActivity.class);
-            if(firebaseAuth.getCurrentUser() != null) {
+            Intent intent;
+            if (!hasOnboarded) {
+                intent = new Intent(this, OnboardingActivity.class);
+            } else if (firebaseAuth.getCurrentUser() != null) {
                 intent = new Intent(this, MainActivity.class);
+            } else {
+                intent = new Intent(this, PromptActivity.class);
             }
             startActivity(intent);
             finish();

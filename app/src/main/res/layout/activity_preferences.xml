@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What matters to you?"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_500"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select topics you'd like to focus on. You can change these later."
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginBottom="32dp" />
+
+        <CheckBox
+            android:id="@+id/chkDiabetes"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Blood Glucose Tracking"
+            android:textSize="18sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/chkHeart"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Heart Rate Monitoring"
+            android:textSize="18sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/chkWeight"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Weight &amp; BMI"
+            android:textSize="18sp"
+            android:checked="true"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/chkNutrition"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Nutrition &amp; BMR"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <CheckBox
+            android:id="@+id/chkReminders"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Medication Reminders"
+            android:textSize="18sp"
+            android:layout_marginBottom="32dp" />
+
+        <Button
+            android:id="@+id/btnFinish"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Get Started"
+            android:textSize="18sp"
+            android:backgroundTint="@color/purple_500" />
+    </LinearLayout>
+</ScrollView>

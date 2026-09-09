@@ -63,21 +63,21 @@ public class FeedbackActivity extends AppCompatActivity {
             textMessage.setError("Please write something");
             return;
         } else if (textMessage.getText().length() < 4) {
-            textUsername.setError("Input too short, minimum of 4");
+            textMessage.setError("Input too short, minimum of 4");
             return;
         }
         //insert data to database
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Map<String, Object> message = new HashMap<>();
-        message.put("name", textUsername.getText().toString());
-        message.put("message", message);
-        message.put("time", new Date().getTime());
-        message.put("opened", false);
+        Map<String, Object> feedback = new HashMap<>();
+        feedback.put("name", textUsername.getText().toString());
+        feedback.put("message", textMessage.getText().toString());
+        feedback.put("time", new Date().getTime());
+        feedback.put("opened", false);
 
         // Add a new document with a generated ID
         db.collection("feedback")
-                .add(message)
+                .add(feedback)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(FeedbackActivity.this, "Message Send Successfully", Toast.LENGTH_SHORT).show();
                     //documentReference.getId();

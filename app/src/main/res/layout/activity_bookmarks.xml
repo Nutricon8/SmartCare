@@ -12,7 +12,22 @@
         android:layout_height="match_parent"
         android:id="@+id/recyclerView"
         android:layout_above="@id/adViewContainer"
+        android:clipToPadding="false"
+        android:padding="5dp"
         tools:listitem="@layout/item_post"/>
+
+    <TextView
+        android:id="@+id/textEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/adViewContainer"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="No bookmarks yet. Tap the bookmark icon on any article to save it here."
+        android:textSize="18sp"
+        android:padding="32dp"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/adViewContainer"
         android:layout_width="match_parent"

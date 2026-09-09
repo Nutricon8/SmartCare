@@ -65,11 +65,6 @@ public class TrackerFragment extends Fragment {
             interstitialManager.showInterstitial(requireActivity());
         });
 
-        cardBMI.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), BmiActivity.class);
-            startActivity(intent);
-            interstitialManager.showInterstitial(requireActivity());
-        });
         cardHeartRate.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), HeartRateActivity.class);
             startActivity(intent);

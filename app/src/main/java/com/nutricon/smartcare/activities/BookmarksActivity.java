@@ -1,10 +1,14 @@
 package com.nutricon.smartcare.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,15 +23,17 @@ import com.nutricon.smartcare.ads.BannerManager;
 import com.nutricon.smartcare.data.Post;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 public class BookmarksActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostsAdapter postsAdapter;
     private List<Post> postList;
     private FirebaseFirestore db;
-    LinearLayoutManager linearLayoutManager;
+    private TextView textEmpty;
+    private Set<String> bookmarkIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +44,14 @@ public class BookmarksActivity extends AppCompatActivity {
         BannerManager bannerManager = new BannerManager(this, BookmarksActivity.this, adViewContainer);
         bannerManager.loadBanner();
 
+        SharedPreferences prefs = getSharedPreferences("PREFERENCES", Context.MODE_PRIVATE);
+        bookmarkIds = prefs.getStringSet("bookmark_ids", new HashSet<>());
 
         recyclerView = findViewById(R.id.recyclerView);
+        textEmpty = findViewById(R.id.textEmpty);
         postList = new ArrayList<>();
         postsAdapter = new PostsAdapter(BookmarksActivity.this, this, postList);
-        linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         db = FirebaseFirestore.getInstance();
 
         setAnimation();
@@ -55,20 +63,29 @@ public class BookmarksActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        postList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            /*if(postList.contains(document)){
+                            if (bookmarkIds.contains(document.getId())) {
                                 Post post = new Post(
                                         document.getId(),
-                                        "smartcare",
+                                        "Smart Care",
                                         document.getString("title"),
                                         document.getString("description"),
                                         document.getString("date"),
                                         document.getString("image"));
                                 postList.add(post);
-                            }*/
+                            }
                         }
                         recyclerView.setAdapter(postsAdapter);
                         postsAdapter.notifyDataSetChanged();
+
+                        if (postList.isEmpty()) {
+                            textEmpty.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        } else {
+                            textEmpty.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         Toast.makeText(this, task.getException().toString(), Toast.LENGTH_SHORT).show();
                     }
@@ -76,25 +93,8 @@ public class BookmarksActivity extends AppCompatActivity {
     }
 
     private void setAnimation() {
-        int resId = 0;
-
-        Random rand = new Random();
-        int n = rand.nextInt(4);
-        ArrayList arrayList = new ArrayList<>();
-        arrayList.add(R.anim.layout_animation_fall_down);
-        arrayList.add(R.anim.layout_animation_slide_up);
-        arrayList.add(R.anim.layout_animation_rotate_in);
-        arrayList.add(R.anim.layout_animation_scale_in);
-        resId = R.anim.layout_animation_fall_down;
-
-
-        if (resId != 0) {
-            // Set animation for RecyclerView
-            LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-            recyclerView.setLayoutAnimation(animation);
-            readFirebase();
-        }
-
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(animation);
+        readFirebase();
     }
-
 }

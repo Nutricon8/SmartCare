@@ -49,7 +49,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         Picasso.get().load(post.getImage()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(holder.image);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, PostItemActivity.class);
-            intent.putExtra("postId", post.getId());
+            intent.putExtra("id", post.getId());
             activity.startActivity(intent);
         });
     }

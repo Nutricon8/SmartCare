@@ -1,7 +1,6 @@
 package com.nutricon.smartcare.ads;
 
 import android.app.Activity;
-import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
@@ -14,9 +13,15 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.nutricon.smartcare.resources.Constants;
 
 public class InterstitialManager {
-    Constants constants = new Constants();
+    private static final int MAX_RETRIES = 3;
+    private final Constants constants = new Constants();
     private InterstitialAd interstitialAd = null;
-    public void   loadInterstitial(Activity activity){
+    private int retryCount = 0;
+    private boolean isLoading = false;
+
+    public void loadInterstitial(Activity activity) {
+        if (isLoading || interstitialAd != null) return;
+        isLoading = true;
         AdRequest adRequest = new AdRequest.Builder().build();
 
         InterstitialAd.load(activity, constants.getInterstitialAdId(), adRequest, new InterstitialAdLoadCallback() {
@@ -24,36 +29,38 @@ public class InterstitialManager {
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 interstitialAd = null;
-                new Handler().postDelayed(() ->{
-                        loadInterstitial(activity);
-                }, 3000);
+                isLoading = false;
             }
 
             @Override
             public void onAdLoaded(@NonNull InterstitialAd mInterstitialAd) {
-                super.onAdLoaded(interstitialAd);
+                super.onAdLoaded(mInterstitialAd);
                 interstitialAd = mInterstitialAd;
+                isLoading = false;
+                retryCount = 0;
             }
         });
     }
 
-    public void showInterstitial(Activity activity){
-        if(interstitialAd !=null) {
+    public void showInterstitial(Activity activity) {
+        if (interstitialAd != null) {
             interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
                     super.onAdDismissedFullScreenContent();
+                    interstitialAd = null;
                     loadInterstitial(activity);
                 }
 
                 @Override
                 public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                     super.onAdFailedToShowFullScreenContent(adError);
+                    interstitialAd = null;
                     loadInterstitial(activity);
                 }
             });
             interstitialAd.show(activity);
-        }else{
+        } else {
             loadInterstitial(activity);
         }
     }
